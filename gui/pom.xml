@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.bertvn</groupId>
+        <artifactId>minesweeper</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>gui</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.bertvn</groupId>
+            <artifactId>domain</artifactId>
+            <version>${revision}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>2.3.3</version>
+                <executions>
+                    <execution>
+                        <id>l4j-clui</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>gui</headerType>
+                            <outfile>target/minesweeper.exe</outfile>
+                            <jar>target/${project.artifactId}-${project.version}.jar</jar>
+                            <errTitle>minesweeper</errTitle>
+                            <classPath>
+                                <mainClass>org.bertvn.gui.Main</mainClass>
+                                <addDependencies>false</addDependencies>
+                                <preCp>anything</preCp>
+                            </classPath>
+                            <jre>
+                                <minVersion>17</minVersion>
+                                <path>C:\Program Files\Eclipse Adoptium\jdk-17.0.5.8-hotspot</path>
+                            </jre>
+                            <versionInfo>
+                                <fileVersion>0.0.0.1</fileVersion>
+                                <txtFileVersion>${revision}</txtFileVersion>
+                                <fileDescription>a game of minesweeper</fileDescription>
+                                <copyright>Bert van Nimwegen 2023</copyright>
+                                <productVersion>0.0.0.1</productVersion>
+                                <txtProductVersion>{$revision}</txtProductVersion>
+                                <productName>MineSweeper</productName>
+                                <companyName>N/A</companyName>
+                                <internalName>minesweeper</internalName>
+                                <originalFilename>MineSweeper.exe</originalFilename>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
