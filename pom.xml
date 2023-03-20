@@ -28,6 +28,20 @@
         <project.description>minesweeper java edition</project.description>
     </properties>
 
+    <developers>
+        <developer>
+            <id>Bertvn</id>
+            <name>Bert van Nimwegen</name>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>The GNU Lesser General Public License, Version 3.0</name>
+            <url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+        </license>
+    </licenses>
+
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
