@@ -1,6 +1,7 @@
 package org.bertvn.domain;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +18,10 @@ public class GameBoard {
     private int columns;
     @Getter
     private int bombs;
+
+    @Getter
+    @Setter
+    private boolean initialized = false;
 
     public GameBoard() {
         this(10, 10, 20);
@@ -38,6 +43,7 @@ public class GameBoard {
 
     public void reset() {
         gameRowMap.clear();
+        initialized = false;
         for(int i = 0; i < rows; i++) {
             gameRowMap.put(i, new GameRow(i, columns));
         }

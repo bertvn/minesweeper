@@ -13,12 +13,12 @@ public class GameGenerator {
     private final GameBoard gameBoard;
     private Long randomSeed;
 
-    public GameGenerator() {
-        gameBoard = new GameBoard();
+    public GameGenerator(GameBoard gameBoard) {
+        this.gameBoard = gameBoard;
     }
 
-    public GameGenerator(Long randomSeed) {
-        this();
+    public GameGenerator(GameBoard gameBoard, Long randomSeed) {
+        this(gameBoard);
         this.randomSeed = randomSeed;
     }
 
@@ -31,7 +31,7 @@ public class GameGenerator {
         gameBoard.reset();
     }
 
-    public GameHandler generateMap(int row, int column) {
+    public void generateMap(int row, int column) {
         int bombs = gameBoard.getBombs();
         Random random = createRNGGenerator();
         List<GameLocation> bombLocations = new ArrayList<>();
@@ -55,10 +55,7 @@ public class GameGenerator {
                 gameCell.addBombCount();
             }
         }
-        GameHandler gameHandler = new GameHandler(gameBoard);
-        gameHandler.clearCell(row, column);
-
-        return gameHandler;
+        gameBoard.setInitialized(true);
     }
 
     private Random createRNGGenerator() {

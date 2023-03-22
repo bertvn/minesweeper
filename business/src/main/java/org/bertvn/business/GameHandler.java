@@ -11,12 +11,25 @@ import java.util.stream.IntStream;
 public class GameHandler {
 
     private final GameBoard gameBoard;
+    private final GameGenerator gameGenerator;
 
-    public GameHandler(GameBoard gameBoard) {
-        this.gameBoard = gameBoard;
+    public GameHandler() {
+        this(null);
+    }
+
+    public GameHandler(Long mapSeed) {
+        this.gameBoard = new GameBoard();
+        this.gameGenerator = new GameGenerator(gameBoard, mapSeed);
+    }
+
+    public void changeGameBoard(int width, int height, int bombs) {
+        gameGenerator.changeGameBoard(width, height, bombs);
     }
 
     public boolean clearCell(int row, int column) {
+        if(!gameBoard.isInitialized()) {
+            gameGenerator.generateMap(row, column);
+        }
         GameCell cell = gameBoard.getCell(row, column);
         boolean safe = clearCell(cell);
 
@@ -76,12 +89,38 @@ public class GameHandler {
         return gameBoard.getCell(row, column).isFlagged();
     }
 
+    public String getChar(int row, int column){
+        GameCell cell = gameBoard.getCell(row, column);
+        if(cell.isFlagged()) {
+            return "⚑";
+        }
+        if(cell.isCleared()){
+            return "" + cell.getBombCount();
+        }
+        return "";
+    }
 
     public boolean isCompleted() {
         return IntStream.range(0, gameBoard.getRows())
                 .mapToObj(gameBoard::getRow)
                 .flatMap(row -> row.getCells().stream())
                 .allMatch(cell -> cell.isBomb() || cell.isCleared());
+    }
+
+    public void reset() {
+        gameBoard.reset();
+    }
+
+    public int getRows() {
+        return gameBoard.getRows();
+    }
+
+    public int getColumns() {
+        return gameBoard.getColumns();
+    }
+
+    public int getBombs() {
+        return gameBoard.getBombs();
     }
 
 

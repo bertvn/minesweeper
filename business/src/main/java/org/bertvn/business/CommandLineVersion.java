@@ -11,8 +11,9 @@ public class CommandLineVersion {
     public static final Pattern CHECK_FLAG_PATTERN = Pattern.compile("(?:check|surround|flag)");
 
     public static void main(String[] args) {
-        GameGenerator gameGenerator = new GameGenerator();
-        gameGenerator.changeGameBoard(10, 10, 20);
+
+        GameHandler gameHandler = new GameHandler();
+        gameHandler.changeGameBoard(10, 10, 20);
         // Enter data using BufferReader
         Scanner reader = new Scanner(System.in);
 
@@ -21,7 +22,7 @@ public class CommandLineVersion {
         int row = reader.nextInt();
         int column = reader.nextInt();
 
-        GameHandler gameHandler = gameGenerator.generateMap(row, column);
+        gameHandler.clearCell(row, column);
 
         while(true) {
             gameHandler.printBoard();
