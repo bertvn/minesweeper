@@ -4,6 +4,8 @@ import org.bertvn.domain.GameBoard;
 import org.bertvn.domain.GameCell;
 import org.bertvn.domain.GameCellState;
 import org.bertvn.domain.GameRow;
+import org.bertvn.dto.GameCellDto;
+import org.bertvn.mappers.GameCellMapper;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -77,8 +79,8 @@ public class GameHandler {
         return true;
     }
 
-    public void flagCell(int row, int column) {
-        gameBoard.getCell(row, column).toggleFlag();
+    public boolean flagCell(int row, int column) {
+        return gameBoard.getCell(row, column).toggleFlag();
     }
 
     public boolean isCleared(int row, int column) {
@@ -89,15 +91,9 @@ public class GameHandler {
         return gameBoard.getCell(row, column).isFlagged();
     }
 
-    public String getChar(int row, int column){
+    public GameCellDto getCell(int row, int column) {
         GameCell cell = gameBoard.getCell(row, column);
-        if(cell.isFlagged()) {
-            return "⚑";
-        }
-        if(cell.isCleared()){
-            return "" + cell.getBombCount();
-        }
-        return "";
+        return GameCellMapper.INSTANCE.toDto(cell);
     }
 
     public boolean isCompleted() {

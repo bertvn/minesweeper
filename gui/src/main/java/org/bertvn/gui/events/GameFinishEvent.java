@@ -1,6 +1,6 @@
 package org.bertvn.gui.events;
 
-public class GameFinishEvent implements IGameEvent {
+public class GameFinishEvent implements IGameEvent, IGameStopEvent {
 
     private final boolean won;
 

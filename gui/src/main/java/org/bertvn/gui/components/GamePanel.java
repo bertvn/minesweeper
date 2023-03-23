@@ -1,20 +1,27 @@
 package org.bertvn.gui.components;
 
 import org.bertvn.business.GameHandler;
+import org.bertvn.dto.GameCellDto;
 import org.bertvn.gui.events.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
-public class GamePanel extends JPanel implements IObserver{
+public class GamePanel extends JPanel implements IObserver {
+
+    private static final Color[] COLORS = new Color[]{
+            Color.BLACK, new Color(0, 102, 0), new Color(102, 0, 0),
+            new Color(0, 0, 102), new Color(0, 102, 51), new Color(102, 0, 51),
+            new Color(0, 51, 102), new Color(0, 51, 0), new Color(51, 0, 0)
+    };
 
     private GameHandler gameHandler;
     private int squareSize;
     private boolean started = false;
-    private MouseListener mouseListener;
     private boolean active = true;
+    private boolean renderBombs = false;
 
     public void setGameHandler(GameHandler gameHandler) {
         this.gameHandler = gameHandler;
@@ -22,10 +29,11 @@ public class GamePanel extends JPanel implements IObserver{
         Notifier.getInstance().notify(new BombSetEvent(gameHandler.getBombs()));
         repaint();
 
-        mouseListener = new MouseListener() {
+        MouseAdapter mouseListener = new MouseAdapter() {
+
             @Override
-            public void mouseClicked(MouseEvent e) {
-                if(!active){
+            public void mouseReleased(MouseEvent e) {
+                if(!active) {
                     return;
                 }
                 int x = e.getX();
@@ -52,8 +60,13 @@ public class GamePanel extends JPanel implements IObserver{
 
                 }
                 else if(e.getButton() == MouseEvent.BUTTON3) {
-                    gameHandler.flagCell(yCell, xCell);
-                    Notifier.getInstance().notify(new BombFlaggedEvent(gameHandler.isFlagged(yCell, xCell)));
+                    if(!started) {
+                        return;
+                    }
+                    boolean modified = gameHandler.flagCell(yCell, xCell);
+                    if(modified) {
+                        Notifier.getInstance().notify(new BombFlaggedEvent(gameHandler.isFlagged(yCell, xCell)));
+                    }
                 }
                 repaint();
 
@@ -61,26 +74,6 @@ public class GamePanel extends JPanel implements IObserver{
                     Notifier.getInstance().notify(new GameFinishEvent(true));
                 }
 
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                //do nothing
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                //do nothing
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                //do nothing
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                //do nothing
             }
         };
         addMouseListener(mouseListener);
@@ -101,15 +94,52 @@ public class GamePanel extends JPanel implements IObserver{
             for(int j = 0; j < columns; j++) {
                 g.setColor(Color.BLACK);
                 g.drawRect(j * squareSize, i * squareSize, squareSize, squareSize);
-                g.drawString(gameHandler.getChar(i, j), j * squareSize + 3, (i + 1) * squareSize - 2);
+                GameCellDto cell = gameHandler.getCell(i, j);
+                String value = "";
+                switch(cell.cellState()) {
+                    case CLEAN -> {
+                        if(renderBombs && cell.isBomb()) {
+                            value = "⦻";
+                        }
+                    }
+                    case DIRTY -> {
+                        if(cell.isBomb()) {
+                            value = "⦻";
+                        }
+                        else {
+                            int bombCount = cell.bombCount();
+                            g.setColor(COLORS[bombCount]);
+                            value = "" + bombCount;
+                        }
+                    }
+                    case FLAGGED -> {
+                        value = "⚑";
+                        g.setColor(Color.RED);
+                    }
+                }
+                g.drawString(value, j * squareSize + 3, (i + 1) * squareSize - 2);
             }
         }
     }
 
     @Override
     public void notify(IGameEvent gameEvent) {
-        if(gameEvent instanceof GameFinishEvent){
+        if(gameEvent instanceof GameFinishEvent finishEvent) {
+            if(!finishEvent.isWon()) {
+                renderBombs = true;
+            }
+            repaint();
             active = false;
+        }
+        if(gameEvent instanceof GameChangeEvent gameChange) {
+            gameHandler.changeGameBoard(gameChange.getColumns(), gameChange.getRows(), gameChange.getBombs());
+        }
+        if(gameEvent instanceof GameResetEvent) {
+            gameHandler.reset();
+            started = false;
+            renderBombs = false;
+            repaint();
+            active = true;
         }
     }
 }

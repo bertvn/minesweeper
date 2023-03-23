@@ -28,7 +28,6 @@ public class GameGenerator {
 
     public void changeGameBoard(int width, int height, int bombs) {
         gameBoard.modify(width, height, bombs);
-        gameBoard.reset();
     }
 
     public void generateMap(int row, int column) {

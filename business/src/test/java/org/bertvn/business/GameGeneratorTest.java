@@ -108,6 +108,7 @@ class GameGeneratorTest {
     private static GameHandler generateGame() {
         GameHandler gameHandler = new GameHandler(MAP_SEED);
         gameHandler.changeGameBoard(10, 10, 20);
+        gameHandler.reset();
         gameHandler.clearCell(5, 5);
         return gameHandler;
     }

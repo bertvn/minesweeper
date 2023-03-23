@@ -1,9 +1,6 @@
 package org.bertvn.gui.components.labels;
 
-import org.bertvn.gui.events.GameFinishEvent;
-import org.bertvn.gui.events.GameStartEvent;
-import org.bertvn.gui.events.IGameEvent;
-import org.bertvn.gui.events.IObserver;
+import org.bertvn.gui.events.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -36,8 +33,12 @@ public class TimerLabel extends JLabel implements IObserver {
             startTime = -1;
             timer.restart();
         }
-        if(gameEvent instanceof GameFinishEvent) {
+        if(gameEvent instanceof IGameStopEvent) {
             timer.stop();
+        }
+        if(gameEvent instanceof GameResetEvent) {
+            startTime = -1;
+            setText("000");
         }
     }
 }

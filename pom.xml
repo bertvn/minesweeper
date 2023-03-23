@@ -11,10 +11,13 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>gui</module>
-        <module>domain</module>
-        <module>business</module>
         <module>application</module>
+        <module>business</module>
+        <module>common</module>
+        <module>domain</module>
+        <module>dto</module>
+        <module>gui</module>
+        <module>mappers</module>
     </modules>
 
     <properties>
@@ -26,6 +29,7 @@
         <project.organization.name>Bertvn</project.organization.name>
         <project.inceptionYear>2023</project.inceptionYear>
         <project.description>minesweeper java edition</project.description>
+        <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
     </properties>
 
     <developers>
@@ -75,6 +79,11 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.7.1</version>
             </plugin>
         </plugins>
     </build>
