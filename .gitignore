@@ -2,3 +2,4 @@
 /.idea
 
 *.iml
+/gui/src/main/resources/old/

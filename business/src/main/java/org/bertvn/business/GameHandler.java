@@ -3,7 +3,8 @@ package org.bertvn.business;
 import org.bertvn.domain.GameBoard;
 import org.bertvn.domain.GameCell;
 import org.bertvn.domain.GameCellState;
-import org.bertvn.domain.GameRow;
+import org.bertvn.dto.GameCellDto;
+import org.bertvn.mappers.GameCellMapper;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -11,12 +12,25 @@ import java.util.stream.IntStream;
 public class GameHandler {
 
     private final GameBoard gameBoard;
+    private final GameGenerator gameGenerator;
 
-    public GameHandler(GameBoard gameBoard) {
-        this.gameBoard = gameBoard;
+    public GameHandler() {
+        this(null);
+    }
+
+    public GameHandler(Long mapSeed) {
+        this.gameBoard = new GameBoard();
+        this.gameGenerator = new GameGenerator(gameBoard, mapSeed);
+    }
+
+    public void changeGameBoard(int width, int height, int bombs) {
+        gameGenerator.changeGameBoard(width, height, bombs);
     }
 
     public boolean clearCell(int row, int column) {
+        if(!gameBoard.isInitialized()) {
+            gameGenerator.generateMap(row, column);
+        }
         GameCell cell = gameBoard.getCell(row, column);
         boolean safe = clearCell(cell);
 
@@ -64,8 +78,8 @@ public class GameHandler {
         return true;
     }
 
-    public void flagCell(int row, int column) {
-        gameBoard.getCell(row, column).toggleFlag();
+    public boolean flagCell(int row, int column) {
+        return gameBoard.getCell(row, column).toggleFlag();
     }
 
     public boolean isCleared(int row, int column) {
@@ -76,6 +90,10 @@ public class GameHandler {
         return gameBoard.getCell(row, column).isFlagged();
     }
 
+    public GameCellDto getCell(int row, int column) {
+        GameCell cell = gameBoard.getCell(row, column);
+        return GameCellMapper.INSTANCE.toDto(cell);
+    }
 
     public boolean isCompleted() {
         return IntStream.range(0, gameBoard.getRows())
@@ -84,41 +102,23 @@ public class GameHandler {
                 .allMatch(cell -> cell.isBomb() || cell.isCleared());
     }
 
-
-    //#region print board
-    public void printBoard() {
-        printBorder();
-        for(int i = 0; i < gameBoard.getRows(); i++) {
-            printRow(gameBoard.getRow(i), i);
-        }
-        printBorder();
+    public void reset() {
+        gameBoard.reset();
     }
 
-
-    private void printBorder() {
-        System.out.print("+");
-        for(int i = 0; i < gameBoard.getColumns(); i++) {
-            System.out.print(" " + i);
-        }
-        System.out.println(" +");
+    public int getRows() {
+        return gameBoard.getRows();
     }
 
-    private void printRow(GameRow gameRow, int rowIndex) {
-        System.out.print(rowIndex);
-        for(int i = 0; i < gameBoard.getColumns(); i++) {
-            GameCell cell = gameRow.getColumn(i);
-            GameCellState cellState = cell.getCellState();
-            if(cellState == GameCellState.CLEAN) {
-                System.out.print(" □");
-            }
-            else if(cellState == GameCellState.FLAGGED) {
-                System.out.print(" ⚑");
-            }
-            else {
-                System.out.print(" " + cell.getBombCount());
-            }
-        }
-        System.out.println(" " + rowIndex);
+    public int getColumns() {
+        return gameBoard.getColumns();
     }
-    //#endregion
+
+    public int getBombs() {
+        return gameBoard.getBombs();
+    }
+
+    public boolean isValidCell(int row, int column) {
+        return gameBoard.getRows() > row && gameBoard.getColumns() > column;
+    }
 }

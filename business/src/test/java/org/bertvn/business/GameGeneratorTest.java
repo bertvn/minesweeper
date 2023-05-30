@@ -12,9 +12,9 @@ class GameGeneratorTest {
     @Test
     @Timeout(3)
     void testGeneration() {
-        GameGenerator gameGenerator = new GameGenerator();
-        gameGenerator.resetGameBoard();
-        gameGenerator.generateMap(5, 5);
+        GameHandler gameHandler = new GameHandler();
+        gameHandler.reset();
+        gameHandler.clearCell(5, 5);
         assertTrue(true);
     }
 
@@ -106,9 +106,11 @@ class GameGeneratorTest {
     }
 
     private static GameHandler generateGame() {
-        GameGenerator gameGenerator = new GameGenerator(MAP_SEED);
-        gameGenerator.changeGameBoard(10, 10, 20);
-        return gameGenerator.generateMap(5, 5);
+        GameHandler gameHandler = new GameHandler(MAP_SEED);
+        gameHandler.changeGameBoard(10, 10, 20);
+        gameHandler.reset();
+        gameHandler.clearCell(5, 5);
+        return gameHandler;
     }
 
     private static void clearCellSuccessfully(GameHandler gameHandler, int row, int column) {

@@ -11,7 +11,7 @@ public class GameCell {
     private final int row;
     private final int column;
 
-    private boolean bomb;
+    private boolean isBomb;
     private GameCellState cellState = GameCellState.CLEAN;
     private int bombCount = 0;
 
@@ -19,14 +19,15 @@ public class GameCell {
         bombCount++;
     }
 
-    public void toggleFlag() {
+    public boolean toggleFlag() {
         switch(cellState) {
             case CLEAN -> cellState = GameCellState.FLAGGED;
             case FLAGGED -> cellState = GameCellState.CLEAN;
             case DIRTY -> {
-                //do nothing or log?
+                return false;
             }
         }
+        return true;
     }
 
     public boolean isFlagged() {

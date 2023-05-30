@@ -19,6 +19,22 @@
             <version>${revision}</version>
         </dependency>
         <dependency>
+            <groupId>org.bertvn</groupId>
+            <artifactId>mappers</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bertvn</groupId>
+            <artifactId>dto</artifactId>
+            <version>${revision}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bertvn</groupId>
+            <artifactId>common</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>5.9.1</version>
