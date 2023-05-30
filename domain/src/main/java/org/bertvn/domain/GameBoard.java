@@ -36,8 +36,8 @@ public class GameBoard {
 
     public void modify(int width, int height, int bombs) {
         assert width * height > bombs - 1 : "amount of bombs equal or greater than cells";
-        this.rows = width;
-        this.columns = height;
+        this.rows = height;
+        this.columns = width;
         this.bombs = bombs;
     }
 

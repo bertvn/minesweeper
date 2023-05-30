@@ -1,20 +1,20 @@
 package org.bertvn.gui.components.labels;
 
+import org.bertvn.gui.GameState;
 import org.bertvn.gui.events.*;
 
-import javax.swing.*;
-
-public class BombCounterLabel extends JLabel implements IObserver {
+public class BombCounterLabel extends NumberPainter implements IObserver {
 
     private int count = 0;
     private int initialCount;
 
     public BombCounterLabel() {
-        updateLabel();
+        //do nothing
     }
 
-    private void updateLabel() {
-        setText(String.format("%03d", count));
+    @Override
+    protected String getText() {
+        return (String.format("%03d", count));
     }
 
     @Override
@@ -22,7 +22,7 @@ public class BombCounterLabel extends JLabel implements IObserver {
         if(gameEvent instanceof BombSetEvent bombSetEvent) {
             initialCount = bombSetEvent.getBombCount();
             count = bombSetEvent.getBombCount();
-            updateLabel();
+            repaint();
         }
         if(gameEvent instanceof BombFlaggedEvent flaggedEvent) {
             if(flaggedEvent.isFlagged()) {
@@ -31,14 +31,21 @@ public class BombCounterLabel extends JLabel implements IObserver {
             else {
                 count++;
             }
-            updateLabel();
+            repaint();
         }
         if(gameEvent instanceof GameChangeEvent gameChanger) {
             initialCount = gameChanger.getBombs();
+            repaint();
+        }
+        if(gameEvent instanceof GameFinishEvent finishEvent){
+            if(finishEvent.getState() == GameState.WON){
+                count = 0;
+                repaint();
+            }
         }
         if(gameEvent instanceof GameResetEvent) {
             count = initialCount;
-            updateLabel();
+            repaint();
         }
     }
 }

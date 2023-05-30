@@ -3,7 +3,6 @@ package org.bertvn.business;
 import org.bertvn.domain.GameBoard;
 import org.bertvn.domain.GameCell;
 import org.bertvn.domain.GameCellState;
-import org.bertvn.domain.GameRow;
 import org.bertvn.dto.GameCellDto;
 import org.bertvn.mappers.GameCellMapper;
 
@@ -119,41 +118,7 @@ public class GameHandler {
         return gameBoard.getBombs();
     }
 
-
-    //#region print board
-    public void printBoard() {
-        printBorder();
-        for(int i = 0; i < gameBoard.getRows(); i++) {
-            printRow(gameBoard.getRow(i), i);
-        }
-        printBorder();
+    public boolean isValidCell(int row, int column) {
+        return gameBoard.getRows() > row && gameBoard.getColumns() > column;
     }
-
-
-    private void printBorder() {
-        System.out.print("+");
-        for(int i = 0; i < gameBoard.getColumns(); i++) {
-            System.out.print(" " + i);
-        }
-        System.out.println(" +");
-    }
-
-    private void printRow(GameRow gameRow, int rowIndex) {
-        System.out.print(rowIndex);
-        for(int i = 0; i < gameBoard.getColumns(); i++) {
-            GameCell cell = gameRow.getColumn(i);
-            GameCellState cellState = cell.getCellState();
-            if(cellState == GameCellState.CLEAN) {
-                System.out.print(" □");
-            }
-            else if(cellState == GameCellState.FLAGGED) {
-                System.out.print(" ⚑");
-            }
-            else {
-                System.out.print(" " + cell.getBombCount());
-            }
-        }
-        System.out.println(" " + rowIndex);
-    }
-    //#endregion
 }

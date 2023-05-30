@@ -22,10 +22,6 @@ public class GameGenerator {
         this.randomSeed = randomSeed;
     }
 
-    public void resetGameBoard() {
-        gameBoard.reset();
-    }
-
     public void changeGameBoard(int width, int height, int bombs) {
         gameBoard.modify(width, height, bombs);
     }

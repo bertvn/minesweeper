@@ -60,6 +60,7 @@
                             <headerType>gui</headerType>
                             <outfile>target/minesweeper.exe</outfile>
                             <jar>target/${project.artifactId}-${project.version}-jar-with-dependencies.jar</jar>
+                            <icon>icon.ico</icon>
                             <errTitle>minesweeper</errTitle>
                             <classPath>
                                 <mainClass>org.bertvn.gui.MainLauncher</mainClass>
